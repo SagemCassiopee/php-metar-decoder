@@ -39,7 +39,7 @@ class CloudChunkDecoder extends MetarChunkDecoder implements MetarChunkDecoderIn
         );
 
         // there are clouds, handle cloud layers and visibility
-        if ($found != null && $found[2] == null) {
+        if ($found != null && $found[2] == null && $found[0] != "//////") {
             for ($i = 3; $i <= 23; $i += 4) {
                 if ($found[$i] != null) {
                     $layer = new CloudLayer();
@@ -54,6 +54,13 @@ class CloudChunkDecoder extends MetarChunkDecoder implements MetarChunkDecoderIn
                           ->setType($found[$i + 3]);
                     $result['clouds'][] = $layer;
                 }
+            }
+        } else {
+            if($found != null && $found[2] == null && $found[0] == "//////") {
+            $layer_null = new CloudLayer();
+            $layer_null->setAmount($found[5])
+                       
+            $result['clouds'][] = $layer_null; //just as a tag means no cloud data, also could be change to any else string, likes "no data" etc.
             }
         }
 
